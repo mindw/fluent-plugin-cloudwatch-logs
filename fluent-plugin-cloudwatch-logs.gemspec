@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'fluentd', '>= 0.14.15'
+  spec.add_dependency 'yajl-ruby', '~> 1.0'
   spec.add_dependency 'aws-sdk-cloudwatchlogs', '~> 1.0'
 
   spec.add_development_dependency "bundler", "~> 1.6"

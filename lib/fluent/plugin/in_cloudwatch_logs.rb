@@ -1,5 +1,6 @@
 require 'fluent/plugin/input'
 require 'fluent/plugin/parser'
+require 'yajl'
 
 module Fluent::Plugin
   class CloudwatchLogsInput < Input
@@ -121,7 +122,7 @@ module Fluent::Plugin
         }
       else
         time = (event.timestamp / 1000).floor
-        record = JSON.parse(event.message)
+        record = Yajl.load(event.message)
         router.emit(@tag, time, record)
       end
     end

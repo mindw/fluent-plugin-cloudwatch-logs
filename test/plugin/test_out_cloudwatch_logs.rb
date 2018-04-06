@@ -4,6 +4,8 @@ require 'fileutils'
 require 'fluent/test/driver/output'
 require 'fluent/test/helpers'
 
+require 'yajl'
+
 class CloudwatchLogsOutputTest < Test::Unit::TestCase
   include CloudwatchLogsTestHelper
   include Fluent::Test::Helpers
@@ -305,13 +307,13 @@ class CloudwatchLogsOutputTest < Test::Unit::TestCase
     assert_equal(2, events.size)
     assert_equal(time.to_i * 1000, events[0].timestamp)
     assert_equal((time.to_i + 2) * 1000, events[1].timestamp)
-    assert_equal(records[0], JSON.parse(events[0].message))
-    assert_equal(records[2], JSON.parse(events[1].message))
+    assert_equal(records[0], Yajl.load(events[0].message))
+    assert_equal(records[2], Yajl.load(events[1].message))
 
     events = get_log_events(log_group_name, stream2)
     assert_equal(1, events.size)
     assert_equal((time.to_i + 1) * 1000, events[0].timestamp)
-    assert_equal(records[1], JSON.parse(events[0].message))
+    assert_equal(records[1], Yajl.load(events[0].message))
   end
 
   def test_remove_log_group_name_key_and_remove_log_stream_name_key
@@ -335,7 +337,7 @@ class CloudwatchLogsOutputTest < Test::Unit::TestCase
     events = get_log_events(log_group_name, log_stream_name)
     assert_equal(1, events.size)
     assert_equal(time.to_i * 1000, events[0].timestamp)
-    assert_equal({'cloudwatch' => 'logs1', 'message' => 'message1'}, JSON.parse(events[0].message))
+    assert_equal({'cloudwatch' => 'logs1', 'message' => 'message1'}, Yajl.load(events[0].message))
   end
 
   def test_log_group_aws_tags
