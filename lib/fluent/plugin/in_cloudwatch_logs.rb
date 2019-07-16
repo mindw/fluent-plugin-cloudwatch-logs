@@ -238,6 +238,8 @@ module Fluent::Plugin
           unless metadata.empty?
             record.merge!("metadata" => metadata)
           end
+          record['log_group'] = @log_group_name
+          record['stream'] = stream
           router.emit(@tag, time, record)
         }
       else
@@ -250,6 +252,8 @@ module Fluent::Plugin
           unless metadata.empty?
             record.merge!("metadata" => metadata)
           end
+          record['log_group'] = @log_group_name
+          record['stream'] = stream
           router.emit(@tag, time, record)
         rescue JSON::ParserError, Yajl::ParseError => error # Catch parser errors
           log.error "Invalid JSON encountered while parsing event.message"
