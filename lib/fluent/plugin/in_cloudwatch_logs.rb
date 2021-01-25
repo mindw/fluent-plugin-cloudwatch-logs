@@ -46,6 +46,7 @@ module Fluent::Plugin
       config_param :policy, :string, default: nil
       config_param :duration_seconds, :time, default: nil
     end
+    config_param :enable_sdk_trace, :bool, default: false
 
     config_section :parse do
       config_set_default :@type, 'none'
@@ -83,6 +84,7 @@ module Fluent::Plugin
       options[:region] = @region if @region
       options[:endpoint] = @endpoint if @endpoint
       options[:http_proxy] = @http_proxy if @http_proxy
+      options[:http_wire_trace] = @enable_sdk_trace if @enable_sdk_trace
 
       if @aws_use_sts
         Aws.config[:region] = options[:region]
